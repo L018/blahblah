@@ -72,3 +72,77 @@ def node(l1, l2):
         l2 = l2.next
     return l1.next
 ```
+
+## 4. 多叉树求两点路径
+
+该多叉树每一节点只有儿子节点没有父亲节点，和交叉链表求交点有相似之处。
+
+```
+"""
+这里没有任何新奇之处，只是对多叉树选择了不同的逻辑存储结构，时间换空间。
+只需要层次遍历顺序列表和各节点子节点个数列表即可唯一确定一棵树
+层次遍历顺序列表形如[A, B, C, D, E, F, G, H, I, J,]
+各节点子节点个数列表形如[1, 3, 3, 0, 3, 0, 3, 0, 3,]，最前面 1 是出于计算需要而加的
+依据上面两个列表以及一个编号即可推算出父节点编号和该节点是父节点的第几个元素
+"""
+
+
+class Tree(object):
+    """树节点"""
+
+    def __init__(self, v, c=None):
+        if c is None:
+            c = []
+        self.child = []
+        self.value = v
+        self.child.extend(c)
+
+
+def fatherlist(num, fcnl=None, flist=None):
+    """仅传两个参数 num 和 fcnl 即可。通过该节点的编号 num,获取父节点编号列表，并返回"""
+    if fcnl is None:  # 如果子节点个数列表为 None 直接返回None
+        print("子节点个数列表为空，无法计算")
+        return None
+    if flist is None:
+        flist = []
+    flist.insert(0, num)
+    if num == 1:
+        return
+    s = fcnl[0]
+    i = 0  # 每个 while 循环结束后 i 的值即为 num 父节点编号
+    while s < num:
+        i += 1
+        s += fcnl[i]
+    fatherlist(i, fcnl, flist)  # 递归求取父节点编号
+    return flist  # 返回该节点及父节点编号列表
+
+def main(x, y):
+    # 对于存在子节点列表的节点树而言，层次遍历是最容易实现的遍历方式，
+    # 正常的做法是通过层次遍历来实现上面两个列表，出于方便避免还需要输入一棵树，这里采用直接输入的方式，
+    valuelist = ['A','B','C','D','E','F','G','H','I','J','K','L','N','O','P','Q','R','S','T']
+    numlist = [1,3,3,0,3,0,3,0,3,0,0,0,0,3,0,0,0,0,0,0]
+    # 通过查找获取 x, y 的编号,前提是 x, y 一定在valuelist 中
+    i = valuelist.index(x) + 1
+    j = valuelist.index(y) + 1
+    f1 = fatherlist(i, numlist)  # x 父编号列表
+    f2 = fatherlist(j, numlist)  # y 父编号列表
+    k = 0
+    while f1[k] == f2[k]:
+        k += 1
+    del f1[:k]
+    del f2[:k-1]
+    for m in f1:
+        f2.insert(0, m)
+    # 至此 f2 列表即为从 x 到 y 的路径编号
+    print(len(f2))
+    path = []
+    for n in f2:
+        path.append(valuelist[n-1])
+    print(path)
+
+if __name__ == '__main__':
+    x = input("输入始节点 X 的值：")
+    y = input("输入末节点 Y 的值：")
+    # 如果 x, y 不是树中的值应该在形成 valuelist 和 numlist 时直接打印错误信息，结束程序
+    main(x, y)
+```
