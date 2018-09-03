@@ -146,3 +146,34 @@ if __name__ == '__main__':
     # 如果 x, y 不是树中的值应该在形成 valuelist 和 numlist 时直接打印错误信息，结束程序
     main(x, y)
 ```
+
+## 5. 最大子序列和
+
+```
+def max_subsequence(sequence):
+    """
+    返回最大值以及对应的最大子序列索引，如果该序列均为负值，则返回最大负数。该方法是最简单的遍历方式实现的，还有很大的优化空间。
+    """
+    max = sequence[0]
+    subseq = [(0,0),]
+    i = 0
+    length = len(sequence)
+    while i < length:
+        max_t = sequence[i]
+        sum = sequence[i]
+        subseq_t = [(i,i),]
+        j = i + 1
+        while j < length:
+            sum += sequence[j]
+            if max_t < sum:
+                max_t = sum
+                subseq_t = [(i,j),]
+            if max = sum:
+                subseq_t.append((i,j))
+        if max < max_t:
+            max = max_t
+            subseq = subseq_t
+        if max = max_t:
+            subseq += subseq_t
+    return (max, subseq)
+```
