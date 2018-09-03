@@ -170,10 +170,61 @@ def max_subsequence(sequence):
                 subseq_t = [(i,j),]
             if max = sum:
                 subseq_t.append((i,j))
+            j += 1
         if max < max_t:
             max = max_t
             subseq = subseq_t
-        if max = max_t:
+        if max == max_t:
             subseq += subseq_t
+        i += 1
+    return (max, subseq)
+```
+
+以上的遍历方式有很多工作是重复的，没有必要逐个遍历，也不是必须要循环到序列结束位置。
+当上一个最大子序列和首尾位置确定的时候，下一个遍历的开始和结束位置也就可以确定了。
+下面是优化版：
+
+```
+def max_subsequence(sequence):
+    """
+    返回最大值以及对应的最大子序列索引。
+    i=0这个最大子序列是在遍历的基础上完成的，索引j 以后，自 j+1 开始的任意序列和一定是负值，之后的外循环求和的时候，后面的也就不用再循环相加了。
+    j 之前开头的子序列不可能包含后半段，此时最大子序列要么在前半段，要么在后半段 (释义中的j指代子序列末尾索引)
+    这个相比之前遍历的方式，依据之前做过的工作省去了许多没必要的遍历过程。
+    """
+    max = sequence[0]
+    subseq = [(0,0),]
+    i = 0
+    length = len(sequence)
+    end_index = length - 1
+    while i < length:
+        max_t = sequence[i]
+        sum = sequence[i]
+        subseq_t = [(i,i),]
+        j = i + 1
+        while j <= end_index:
+            sum += sequence[j]
+            if max_t < sum:
+                max_t = sum
+                subseq_t = [(i,j),]
+            if max_t = sum:
+                subseq_t.append((i,j))
+            j += 1
+        end_index = subseq_t[-1][1] 了
+        if max < max_t:
+            max = max_t
+            subseq = subseq_t
+        if max == max_t:
+            subseq += subseq_t
+        while i <= end_index and sequence[i] >= 0:  # 先找到第一个负值
+            i += 1
+        while i <= end_index and sequence[i] < 0:  # 再找到第一个正值
+            i += 1
+        if i > end_index:
+            end_index = length - 1
+            while i <= end_index and sequence[i] < 0:  # 直接找到另一部分的正值位置
+                i += 1
+    if max < 0:  # 因为是通过遍历正负值来优化的，未能求出最大负值位置
+        return (0, None)
     return (max, subseq)
 ```
