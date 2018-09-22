@@ -228,3 +228,152 @@ def max_subsequence(sequence):
         return (0, None)
     return (max, subseq)
 ```
+
+## 6. 深度遍历
+
+```
+class Node(object):
+    """图节点"""
+
+    def __init__(self, v, c=None):
+        if c is None:
+            c = []
+        self.adjacent = []
+        self.value = v
+        self.adjacent.extend(c)
+
+def DFS(graph, first, visited = []):
+    if first in visited:
+        return
+    print(first.value)
+    visited.append(first)
+    for n in first.adjacent:
+        DFS(graph, n, visited)  # 这里可加可不加 visited 参数
+```
+
+## 7. 广度遍历
+
+```
+class Node(object):
+    """图节点"""
+
+    def __init__(self, v, c=None):
+        if c is None:
+            c = []
+        self.adjacent = []
+        self.value = v
+        self.adjacent.extend(c)
+
+def BFS(graph, first, visited = []):
+    queue = []
+    print(first.value)
+    visited.append(first)
+    queue += first.adjacent
+    while queue:
+        n = queue.pop(0)
+        if n in visited:
+            continue
+        print(n.value)
+        visited.append(n)
+        queue += n.adjacent
+```
+
+## 8. 先中后序层次遍历
+
+```
+class Node(object):
+    """二叉树节点"""
+    
+    def __init__(self, value, left = None, right = None):
+        self.value = value
+        self.left = left
+        self.right = right
+
+# 先序遍历
+def pre_order(bitree):
+    if bitree:
+        return
+    print(bitree.value)
+    if bitree.left:
+        pre_order(bitree.left)
+    if bitree.right:
+        pre_order(bitree.right)
+
+# 中序遍历
+def in_order(bitree):
+    if bitree:
+        return
+    if bitree.left:
+        in_order(bitree.left)
+    print(bitree.value)
+    if bitree.right:
+        in_order(bitree.right)
+
+# 后序遍历
+def post_order(bitree):
+    if bitree:
+        return
+    if bitree.left:
+        post_order(bitree.left)
+    if bitree.right:
+        post_order(bitree.right)
+    print(bitree.value)
+
+# 层次遍历
+def level_order(bitree):
+    queue = []
+    if bitree:
+        return
+    print(bitree.value)
+    if bitree.left:
+        queue.append(bitree.left)
+    if bitree.right:
+        queue.append(bitree.right)
+    while queue:
+        n = queue.pop(0)
+        print(n.value)
+        if n.left:
+            queue.append(n.left)
+        if n.right:
+            queue.append(n.right)
+```
+
+## 9. 快速排序
+
+```
+# 常规方式
+def partition(list, i, j): # 划分
+    if i >= j:
+        return list
+    midpivot = list[i]
+    while i < j:
+        while i < j and list[j] >= midpivot:
+            j -= 1
+        if i < j:
+            list[i] = list[j]
+            i += 1
+        while i < j and list[i] < midpivot:  # 
+            i += 1
+        if i < j:
+            list[j] = list[i]
+            j -= 1
+    list[i] = midpivot
+    return i  # 
+def quicksort(list):
+    i = partition(list, 0, len(list)-1)
+    if i > 0:
+        quicksort(list[:i])
+    if i < len(list)-1:
+        quicksort(list[i:])
+
+# 简直作弊
+def quicksort(list):
+    if len(list)<2:
+        return list
+    else:
+        midpivot = list[0]
+        less = [i for i in list if i<=midpivot]
+        bigger = [i for i in list if i > midpivot]
+        return quicksort(less)+[midpivot]+quicksort(bigger)
+```
+
